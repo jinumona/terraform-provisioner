@@ -80,16 +80,12 @@ resource "aws_key_pair" "key" {
 
 resource "aws_instance"  "wordpress" {
     
+    
+    count = 2
     ami                    =  "ami-079b5e5b3971bd10d"
     instance_type          =  "t2.micro"
     key_name               =  aws_key_pair.key.id
     vpc_security_group_ids =  [ aws_security_group.sg.id ]
-    tags = {
-      
-       Name = "wordpress-${var.project}-${var.env}"
-       project = var.project
-       env  = var.env
-    }
     
     provisioner "file" {
         
@@ -120,5 +116,12 @@ resource "aws_instance"  "wordpress" {
       }
    }
     
+    
+     tags = {
+      
+       Name = "${var.project}-${var.env}-${count.index}"
+       project = var.project
+       env = var.env
+  }
 }
 
